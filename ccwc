@@ -3,19 +3,24 @@
 import sys
 
 def main():
-  # command = input("ccwc ")
-  option = sys.argv[1]
-  file_name = sys.argv[2]
+  try:
+    option = sys.argv[1]
+    file_name = sys.argv[2]
+
+  except IndexError:
+    print("Command error\nUsage: ./ccwc -<command options> <filename>")
+    sys.exit(1)
 
   try:
     with open(file_name, "rb") as file:
       content = file.read()
 
       if option == "-c":
-        print(f"{len(content)} {file_name}")
+        print(f"  {len(content)} {file_name}")
 
   except FileNotFoundError:
     print(f"Error: {file_name} was not found")
+    sys.exit(1)
 
 if __name__ == "__main__":
   main()
