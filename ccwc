@@ -20,6 +20,13 @@ def main():
           byte_count += len(chunk)
 
         print(f"  {byte_count} {file_name}")
+      elif option == "-l":
+        line_count = 0
+
+        while chunk := file.read(4096):
+          line_count += chunk.count(b"\n")
+
+        print(f"    {line_count} {file_name}")
       else :
         print(f"{option} command not found")
         sys.exit(1)
