@@ -4,7 +4,7 @@ def main():
   file_name = command.split()[1]
 
   try:
-    with open(file_name, "r") as file:
+    with open(file_name, "rb") as file:
       content = file.read()
 
       if option == "-c":
