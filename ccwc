@@ -13,10 +13,16 @@ def main():
 
   try:
     with open(file_name, "rb") as file:
-      content = file.read()
-
       if option == "-c":
-        print(f"  {len(content)} {file_name}")
+        byte_count = 0
+        
+        while chunk := file.read(4096):
+          byte_count += len(chunk)
+
+        print(f"  {byte_count} {file_name}")
+      else :
+        print(f"{option} command not found")
+        sys.exit(1)
 
   except FileNotFoundError:
     print(f"Error: {file_name} was not found")
