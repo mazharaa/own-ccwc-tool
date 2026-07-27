@@ -2,6 +2,15 @@
 
 import sys
 
+WHITESPACE = {
+  ord(" "),
+  ord("\t"),
+  ord("\n"),
+  ord("\r"),
+  ord("\v"),
+  ord("\f")
+}
+
 def main():
   try:
     option = sys.argv[1]
@@ -27,6 +36,21 @@ def main():
           line_count += chunk.count(b"\n")
 
         print(f"    {line_count} {file_name}")
+      elif option == "-w":
+        word_count = 0
+        chunk_temp = b""
+        in_word = False
+
+        while chunk := file.read(4096):
+          for b in chunk:
+            if b not in WHITESPACE:
+              if not in_word:
+                word_count += 1
+                in_word = True
+            else:
+              in_word = False
+
+        print(f"   {word_count} {file_name}")
       else :
         print(f"{option} command not found")
         sys.exit(1)
