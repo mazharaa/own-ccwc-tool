@@ -88,14 +88,6 @@ def count_char(file_name):
   return char_count
 
 def main():
-  # try:
-  #   option = sys.argv[1]
-  #   file_name = sys.argv[2]
-
-  # except IndexError:
-  #   print("Command error\nUsage: ./ccwc -<command options> <filename>")
-  #   sys.exit(1)
-
   if len(sys.argv) > 2:
     option = sys.argv[1]
     file_name = sys.argv[2]
@@ -104,38 +96,18 @@ def main():
     option = ""
 
   if option == "-c":
-    print(f"  {count_byte(file_name)} {file_name}")
+    print(f"  {count_byte(file_name):>8} {file_name}")
   elif option == "-l":
-    print(f"    {count_line(file_name)} {file_name}")
+    print(f"    {count_line(file_name):>8} {file_name}")
   elif option == "-w":
-    print(f"   {count_word(file_name)} {file_name}")
+    print(f"{count_word(file_name):>8} {file_name}")
   elif option == "-m":
-    print(f"  {count_char(file_name)} {file_name}")
+    print(f"{count_char(file_name):>8} {file_name}")
   elif option == "":
-    print(f"    {count_line(file_name)} {count_word(file_name)} {count_byte(file_name)} {file_name}")
+    print(f"{count_line(file_name):>8}{count_word(file_name):>8}{count_byte(file_name):>8} {file_name}")
   else :
     print(f"{option} command not found")
     sys.exit(1)
-
-  # try:
-  #   with open(file_name, "rb") as file:
-  #     # if option == "-c":
-  #     #   print(f"  {count_byte(file)} {file_name}")
-  #     # elif option == "-l":
-  #     #   print(f"    {count_line(file)} {file_name}")
-  #     # elif option == "-w":
-  #     #   print(f"   {count_word(file)} {file_name}")
-  #     # elif option == "-m":
-  #     #   print(f"  {count_char(file)} {file_name}")
-  #     # elif option == "":
-  #     #   print(f"{count_line(file)} {count_word(file)} {count_byte(file)} {file_name}")
-  #     # else :
-  #     #   print(f"{option} command not found")
-  #     #   sys.exit(1)
-
-  # except FileNotFoundError:
-  #   print(f"Error: {file_name} was not found")
-  #   sys.exit(1)
 
 if __name__ == "__main__":
   main()
