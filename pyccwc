@@ -61,6 +61,20 @@ def main():
           chunk_temp = chunk
 
         print(f"   {word_count} {file_name}")
+      elif option == "-m":
+        char_count = 0
+        leftover = ""
+
+        while chunk := file.read(4096):
+          if leftover:
+            chunk = leftover + chunk
+
+          decoded = chunk.decode("utf-8", errors="ignore")
+          char_count += len(decoded)
+          leftover = chunk[len(decoded.encode("utf-8")):]
+
+
+        print(f"  {char_count} {file_name}")
       else :
         print(f"{option} command not found")
         sys.exit(1)
