@@ -63,7 +63,7 @@ def main():
         print(f"   {word_count} {file_name}")
       elif option == "-m":
         char_count = 0
-        leftover = ""
+        leftover = b""
 
         while chunk := file.read(4096):
           if leftover:
