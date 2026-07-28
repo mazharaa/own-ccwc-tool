@@ -11,76 +11,102 @@ WHITESPACE = {
   ord("\f")
 }
 
-def main():
-  try:
-    option = sys.argv[1]
-    file_name = sys.argv[2]
-
-  except IndexError:
-    print("Command error\nUsage: ./ccwc -<command options> <filename>")
-    sys.exit(1)
-
+def count_byte(file_name):
   try:
     with open(file_name, "rb") as file:
-      if option == "-c":
-        byte_count = 0
-        
-        while chunk := file.read(4096):
-          byte_count += len(chunk)
+      byte_count = 0
 
-        print(f"  {byte_count} {file_name}")
-      elif option == "-l":
-        line_count = 0
-
-        while chunk := file.read(4096):
-          line_count += chunk.count(b"\n")
-
-        print(f"    {line_count} {file_name}")
-      elif option == "-w":
-        word_count = 0
-        chunk_temp = b""
-        # in_word = False
-
-        while chunk := file.read(4096):
-          # Best case for python using split() instead of Byte-by-Byte
-          word_count += len(chunk.split()) 
-
-          if chunk_temp:
-            if (chunk_temp[-1] not in WHITESPACE) and (chunk[0] not in WHITESPACE):
-              word_count -= 1
-
-          # Based on state machine
-          # for b in chunk:
-          #   if b not in WHITESPACE:
-          #     if not in_word:
-          #       word_count += 1
-          #       in_word = True
-          #   else:
-          #     in_word = False
-
-          chunk_temp = chunk
-
-        print(f"   {word_count} {file_name}")
-      elif option == "-m":
-        char_count = 0
-        leftover = b""
-
-        while chunk := file.read(4096):
-          if leftover:
-            chunk = leftover + chunk
-
-          decoded = chunk.decode("utf-8", errors="ignore")
-          char_count += len(decoded)
-          leftover = chunk[len(decoded.encode("utf-8")):]
-
-
-        print(f"  {char_count} {file_name}")
-      else :
-        print(f"{option} command not found")
-        sys.exit(1)
-
+      while chunk := file.read(4096):
+        byte_count += len(chunk)
   except FileNotFoundError:
     print(f"Error: {file_name} was not found")
+    sys.exit(1)
+
+  return byte_count
+
+def count_line(file_name):
+  try:
+    with open(file_name, "rb") as file:
+      line_count = 0
+
+      while chunk := file.read(4096):
+        line_count += chunk.count(b"\n")
+  except FileNotFoundError:
+      print(f"Error: {file_name} was not found")
+      sys.exit(1)
+
+  return line_count
+
+def count_word(file_name):
+  try:
+    with open(file_name, "rb") as file:
+      word_count = 0
+      chunk_temp = b""
+      # in_word = False
+
+      while chunk := file.read(4096):
+        # Best case for python using split() instead of Byte-by-Byte
+        word_count += len(chunk.split()) 
+
+        if chunk_temp:
+          if (chunk_temp[-1] not in WHITESPACE) and (chunk[0] not in WHITESPACE):
+            word_count -= 1
+
+        # Based on state machine
+        # for b in chunk:
+        #   if b not in WHITESPACE:
+        #     if not in_word:
+        #       word_count += 1
+        #       in_word = True
+        #   else:
+        #     in_word = False
+
+        chunk_temp = chunk
+  except FileNotFoundError:
+    print(f"Error: {file_name} was not found")
+    sys.exit(1)
+
+  return word_count
+
+def count_char(file_name):
+  try:
+    with open(file_name, "rb") as file:
+      char_count = 0
+      leftover = b""
+
+      while chunk := file.read(4096):
+        if leftover:
+          chunk = leftover + chunk
+
+        decoded = chunk.decode("utf-8", errors="ignore")
+        char_count += len(decoded)
+        leftover = chunk[len(decoded.encode("utf-8")):]
+  except FileNotFoundError:
+    print(f"Error: {file_name} was not found")
+    sys.exit(1)
+
+  return char_count
+
+def main():
+  if len(sys.argv) > 2:
+    option = sys.argv[1]
+    file_name = sys.argv[2]
+  else :
+    file_name = sys.argv[1]
+    option = ""
+
+  if option == "-c":
+    print(f"  {count_byte(file_name):>8} {file_name}")
+  elif option == "-l":
+    print(f"    {count_line(file_name):>8} {file_name}")
+  elif option == "-w":
+    print(f"{count_word(file_name):>8} {file_name}")
+  elif option == "-m":
+    print(f"{count_char(file_name):>8} {file_name}")
+  elif option == "":
+    print(f"{count_line(file_name):>8}{count_word(file_name):>8}{count_byte(file_name):>8} {file_name}")
+  else :
+    print(f"{option} command not found")
     sys.exit(1)
 
 if __name__ == "__main__":
